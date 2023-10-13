@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>sugaryo.spring-boot-tips</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta charset="UTF-8" />
+	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+	</link>
+	<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</head>
+
+<body>
+
+	<h1 th:text="'■What time is it?■'"></h1>
+
+	<div class="border">
+		<p th:text="${datetime}"></p>
+	</div>
+
+</body>
+
+</html>
