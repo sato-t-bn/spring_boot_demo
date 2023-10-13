@@ -1,7 +1,12 @@
 package com.example.demo.controllers;
 
+import java.io.File;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,5 +76,28 @@ public class WebApiController {
 		log.info(Integer.toString(body.getNumber()));
 		return "受け取ったリクエストボディ: " + body;
 	}
+	
+	/**
+	 * POSTされたJSONデータを取得し、JSONデータを返す
+	 * 
+	 *  @param body SamplePostDtoに準拠するJSONオブジェクト
+	 *  @return POSTにより取得したJSONオブジェクト
+	 */	
+	@RequestMapping(value = "/test/return", method = RequestMethod.POST)
+	private SamplePostDto postAndReturnSamplePostDto(@RequestBody SamplePostDto body) {
+		log.info(Integer.toString(body.getNumber()));
+		SamplePostDto response = new SamplePostDto(body.getNumber(), body.getPhrase());
+		return response;
+	}
 
+	/**
+	 * イメージ画像をリクエスト先に戻す
+	 * 
+	 * @return イメージ画像ファイル(今回はローカルのCドライブ内に用意する)
+	 */	
+	@RequestMapping(value="/get_image", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	private Resource returnImageFile() {
+		log.info("画像ファイルを送信します");
+		return new FileSystemResource(new File("C:\\Users\\sato.takayuki\\Downloads\\EbBwP4iUYAIGoHE.jpg"));
+	}
 }
