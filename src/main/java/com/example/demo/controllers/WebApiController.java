@@ -41,6 +41,10 @@ public class WebApiController {
 	@Autowired
 	SpringTemplateEngine engine;
 	
+	@Qualifier("stringTemplateEngine")
+	@Autowired
+	SpringTemplateEngine string;
+	
 	// SLF4Jのログ出力	
 	private static final Logger log = LoggerFactory.getLogger(WebApiController.class);
 
@@ -77,6 +81,23 @@ public class WebApiController {
 		return "受け取ったクエリ: " + param;
 	}
 
+	/**
+	 * パスに入力された文字列を取得し、画面上に返す]
+	 * メッセージテンプレートはStringテンプレートリゾルバを用いて生成
+	 * 
+	 * @param param パスパラメータとして入力された文字列
+	 * @return パスパラメータとして入力された文字列
+	 */
+	@GetMapping("test/string/{message}")
+	private String testPathParamByStringTemplate(@PathVariable String message) {
+		
+		final String template = "受け取ったパラメータ: [[${message}]] (※Stringテンプレートよりメッセージ生成)";
+		
+		var context = new Context();
+		context.setVariable("message", message);
+		return this.string.process(template, context);
+	}
+	
 	/**
 	 * POSTされたJSONデータを取得する
 	 * 
@@ -158,13 +179,14 @@ public class WebApiController {
 				resolver.setCacheable(true);
 		
 				var engine = new SpringTemplateEngine();
-				engine.setTemplateResolver(resolver);*/
+				engine.setTemplateResolver(resolver);
+		*/
 		
 		var context = new Context();
 		context.setVariable("hour", hour);
 		context.setVariable("timestamp", timestamp);
 		
-		final String message = engine.process("wtii", context);
+		final String message = this.engine.process("wtii", context);
 		log.debug(message);
 		return message;
 	}
