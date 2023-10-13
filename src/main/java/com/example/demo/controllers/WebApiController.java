@@ -1,11 +1,15 @@
 package com.example.demo.controllers;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dtos.SamplePostDto;
 
 /**
  * 単純なGET及びPOSTの操作を受け付けるREST APIのコントローラ
@@ -19,19 +23,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api")
 public class WebApiController {
-	
+
 	// SLF4Jのログ出力	
 	private static final Logger log = LoggerFactory.getLogger(WebApiController.class);
 
 	/**
 	 * 定型文を返すだけ
 	 * 
-	 */ 	
+	 */
 	@RequestMapping("hello")
 	private String hello() {
 		return "Hello, Spring Boot!";
 	}
-	
+
 	/**
 	 * パスに入力された文字列を取得し、画面上に返す
 	 * 
@@ -41,19 +45,31 @@ public class WebApiController {
 	@RequestMapping("test/{something}")
 	private String testPathParam(@PathVariable("something") String param) {
 		log.info(param);
-		return "受け取ったパラメータ: " + param ;
+		return "受け取ったパラメータ: " + param;
 	}
-	
+
 	/**
 	 * クエリパラメータとして入力さた文字列を取得し、画面上に返す
 	 * 
 	 * @param param クエリパラメータとして入力された文字列
 	 * @return クエリパラメータとして入力された文字列
-	 */	
+	 */
 	@RequestMapping("test")
 	private String testQueryParam(@RequestParam("param") String param) {
 		log.info(param);
-		return "受け取ったクエリ: " + param ;
+		return "受け取ったクエリ: " + param;
 	}
-	
+
+	/**
+	 * POSTされたJSONデータを取得する
+	 * 
+	 *  @param body SamplePostDtoに準拠するJSONオブジェクト
+	 *  @return POSTにより取得したJSONオブジェクト
+	 */	
+	@RequestMapping(value = "/test", method = RequestMethod.POST)
+	private String postSamplePostDto(@RequestBody SamplePostDto body) {
+		log.info(Integer.toString(body.getNumber()));
+		return "受け取ったリクエストボディ: " + body;
+	}
+
 }
