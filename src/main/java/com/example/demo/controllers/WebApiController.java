@@ -27,7 +27,7 @@ import com.example.demo.dtos.SamplePostDto;
  * @author sato.takayuki
  */
 @RestController
-@RequestMapping("api")
+//@RequestMapping("api")
 public class WebApiController {
 
 	// SLF4Jのログ出力	
@@ -102,6 +102,12 @@ public class WebApiController {
 		return new FileSystemResource(new File("C:\\Users\\sato.takayuki\\Downloads\\EbBwP4iUYAIGoHE.jpg"));
 	}
 	
+	/**
+	 * 500エラーを返す
+	 * なお、エラーレスポンスは集約例外ハンドラで生成する
+	 * 
+	 * @return RuntimeExceptionのインスタンス
+	 */	
 	@RequestMapping("test/ex")
 	public String testException() throws Exception {
 		throw new RuntimeException("エラーが発生しました");
