@@ -6,6 +6,8 @@ import java.time.format.DateTimeFormatter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -18,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 import com.example.demo.dtos.SamplePostDto;
 
@@ -37,6 +37,10 @@ import com.example.demo.dtos.SamplePostDto;
 @RequestMapping("api")
 public class WebApiController {
 
+	@Qualifier("messageTemplateEngine")
+	@Autowired
+	SpringTemplateEngine engine;
+	
 	// SLF4Jのログ出力	
 	private static final Logger log = LoggerFactory.getLogger(WebApiController.class);
 
@@ -146,15 +150,15 @@ public class WebApiController {
 	 */	
 	private String process(String hour, String timestamp) {
 		
-		var resolver = new ClassLoaderTemplateResolver();
-		resolver.setTemplateMode(TemplateMode.TEXT);
-		resolver.setPrefix("templates/messages/");
-		resolver.setSuffix(".message");
-		resolver.setCharacterEncoding("UTF-8");
-		resolver.setCacheable(true);
-
-		var engine = new SpringTemplateEngine();
-		engine.setTemplateResolver(resolver);
+		/*		var resolver = new ClassLoaderTemplateResolver();
+				resolver.setTemplateMode(TemplateMode.TEXT);
+				resolver.setPrefix("templates/messages/");
+				resolver.setSuffix(".message");
+				resolver.setCharacterEncoding("UTF-8");
+				resolver.setCacheable(true);
+		
+				var engine = new SpringTemplateEngine();
+				engine.setTemplateResolver(resolver);*/
 		
 		var context = new Context();
 		context.setVariable("hour", hour);
