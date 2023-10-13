@@ -1,18 +1,25 @@
 package com.example.demo.controllers;
 
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 import com.example.demo.dtos.SamplePostDto;
 
@@ -111,5 +118,50 @@ public class WebApiController {
 	@RequestMapping("test/ex")
 	public String testException() throws Exception {
 		throw new RuntimeException("エラーが発生しました");
+	}
+	
+	/**
+	 * 現在時刻をテキストメッセージとして返す
+	 * メッセージテンプレートを使用
+	 * 
+	 * @return 現在時刻を表示するテキストメッセージ
+	 */	
+	@GetMapping("what_time_is_it")
+	public String whatTimeIsIt() {
+		
+		LocalDateTime now = LocalDateTime.now();
+		
+		String hour = now.getHour() + "時";
+		String timestamp = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss").format(now);
+		
+		return process(hour, timestamp);
+	}
+
+	/**
+	 * メッセージテンプレートにサーバ現在時刻を流し込む
+	 * 
+	 * @param hour サーバ現在時
+	 * @param timestamp サーバ現在時刻
+	 * @return テンプレートへの変数流し込み結果
+	 */	
+	private String process(String hour, String timestamp) {
+		
+		var resolver = new ClassLoaderTemplateResolver();
+		resolver.setTemplateMode(TemplateMode.TEXT);
+		resolver.setPrefix("templates/messages/");
+		resolver.setSuffix(".message");
+		resolver.setCharacterEncoding("UTF-8");
+		resolver.setCacheable(true);
+
+		var engine = new SpringTemplateEngine();
+		engine.setTemplateResolver(resolver);
+		
+		var context = new Context();
+		context.setVariable("hour", hour);
+		context.setVariable("timestamp", timestamp);
+		
+		final String message = engine.process("wtii", context);
+		log.debug(message);
+		return message;
 	}
 }
