@@ -27,7 +27,7 @@ import com.example.demo.dtos.SamplePostDto;
  * @author sato.takayuki
  */
 @RestController
-//@RequestMapping("api")
+@RequestMapping("api")
 public class WebApiController {
 
 	// SLF4Jのログ出力	

@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
  * @author sato.takayuki
  */
 @RestController
+@RequestMapping("api")
 public class ApiRequestController {
 
 	/**
