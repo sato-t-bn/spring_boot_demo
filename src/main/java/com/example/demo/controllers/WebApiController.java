@@ -24,6 +24,7 @@ import com.example.demo.dtos.SamplePostDto;
  * {@code "localhost:8080/sample/api/test/*"} にアクセスする。
  * </p>
  * 
+ * @author sato.takayuki
  */
 @RestController
 @RequestMapping("api")
@@ -99,5 +100,10 @@ public class WebApiController {
 	private Resource returnImageFile() {
 		log.info("画像ファイルを送信します");
 		return new FileSystemResource(new File("C:\\Users\\sato.takayuki\\Downloads\\EbBwP4iUYAIGoHE.jpg"));
+	}
+	
+	@RequestMapping("test/ex")
+	public String testException() throws Exception {
+		throw new RuntimeException("エラーが発生しました");
 	}
 }
